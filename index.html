@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Load Sheet 737-300/500</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans p-4">
+  <div class="max-w-xl mx-auto space-y-6">
+    <h1 class="text-2xl font-bold text-center text-amber-400">محاسبه Load Sheet - Boeing 737-300/500</h1>
+
+    <div class="grid grid-cols-1 gap-4">
+      <label>تعداد مسافر جلو: <input id="paxFwd" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
+      <label>تعداد مسافر وسط: <input id="paxMid" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
+      <label>تعداد مسافر عقب: <input id="paxAft" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
+      <label>بار جلو (کیلوگرم): <input id="cargoFwd" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
+      <label>بار عقب (کیلوگرم): <input id="cargoAft" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
+      <label>سوخت کل (کیلوگرم): <input id="fuel" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
+    </div>
+
+    <button onclick="calculate()" class="bg-amber-500 hover:bg-amber-600 text-black font-bold py-2 px-4 rounded w-full">
+      محاسبه
+    </button>
+
+    <div id="output" class="bg-gray-800 p-4 rounded shadow text-center hidden">
+      <h2 class="text-xl font-bold mb-2 text-emerald-400">نتایج:</h2>
+      <p id="zfw"></p>
+      <p id="tow"></p>
+      <p id="law"></p>
+      <p id="alert" class="mt-4 font-bold"></p>
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      const paxFwd = +document.getElementById('paxFwd').value || 0;
+      const paxMid = +document.getElementById('paxMid').value || 0;
+      const paxAft = +document.getElementById('paxAft').value || 0;
+      const cargoFwd = +document.getElementById('cargoFwd').value || 0;
+      const cargoAft = +document.getElementById('cargoAft').value || 0;
+      const fuel = +document.getElementById('fuel').value || 0;
+
+      const BOW = 33300; // Basic Operating Weight in kg
+      const paxWeight = (paxFwd + paxMid + paxAft) * 80;
+      const cargo = cargoFwd + cargoAft;
+
+      const ZFW = BOW + paxWeight + cargo;
+      const TOW = ZFW + fuel;
+      const LAW = TOW - 2500; // فرض می‌کنیم 2500 کیلو سوخت مصرف میشه تا فرود
+
+      document.getElementById('zfw').innerText = `ZFW (وزن بدون سوخت): ${ZFW.toLocaleString()} kg`;
+      document.getElementById('tow').innerText = `TOW (وزن هنگام برخاست): ${TOW.toLocaleString()} kg`;
+      document.getElementById('law').innerText = `LAW (وزن هنگام فرود): ${LAW.toLocaleString()} kg`;
+
+      let alertText = "";
+      if (ZFW > 48000) alertText += "⚠️ ZFW از حد مجاز بیشتر است!\n";
+      if (TOW > 59000) alertText += "⚠️ TOW از حد مجاز بیشتر است!\n";
+      if (LAW > 51000) alertText += "⚠️ LAW از حد مجاز بیشتر است!";
+
+      document.getElementById('alert').innerText = alertText || "✅ همه چیز در محدوده مجاز است.";
+      document.getElementById('output').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
