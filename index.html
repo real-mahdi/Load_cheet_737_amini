@@ -1,33 +1,48 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <title>Load Sheet 737-300/500</title>
+  <meta charset="UTF-8" />
+  <title>Load Sheet 737 - Cockpit UI</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Orbitron', sans-serif;
+    }
+    .glass {
+      background: rgba(25, 25, 25, 0.6);
+      backdrop-filter: blur(6px);
+    }
+    .led {
+      box-shadow: 0 0 8px rgba(0, 255, 0, 0.6);
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white font-sans p-4">
-  <div class="max-w-xl mx-auto space-y-6">
-    <h1 class="text-2xl font-bold text-center text-amber-400">محاسبه Load Sheet - Boeing 737-300/500</h1>
+<body class="bg-gray-950 text-green-400 min-h-screen p-6">
+  <div class="max-w-2xl mx-auto space-y-6">
+    <div class="text-center text-3xl text-emerald-400 font-bold tracking-widest">COCKPIT LOAD SHEET</div>
 
-    <div class="grid grid-cols-1 gap-4">
-      <label>تعداد مسافر جلو: <input id="paxFwd" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
-      <label>تعداد مسافر وسط: <input id="paxMid" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
-      <label>تعداد مسافر عقب: <input id="paxAft" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
-      <label>بار جلو (کیلوگرم): <input id="cargoFwd" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
-      <label>بار عقب (کیلوگرم): <input id="cargoAft" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
-      <label>سوخت کل (کیلوگرم): <input id="fuel" type="number" class="w-full p-2 rounded bg-gray-800 text-white"></label>
+    <div class="grid grid-cols-1 gap-4 glass p-6 rounded-xl border border-emerald-700 shadow-lg">
+      <label>تعداد مسافر جلو: <input id="paxFwd" type="number" class="w-full mt-1 p-2 rounded bg-black text-green-400 border border-green-700"></label>
+      <label>تعداد مسافر وسط: <input id="paxMid" type="number" class="w-full mt-1 p-2 rounded bg-black text-green-400 border border-green-700"></label>
+      <label>تعداد مسافر عقب: <input id="paxAft" type="number" class="w-full mt-1 p-2 rounded bg-black text-green-400 border border-green-700"></label>
+      <label>بار جلو (کیلوگرم): <input id="cargoFwd" type="number" class="w-full mt-1 p-2 rounded bg-black text-green-400 border border-green-700"></label>
+      <label>بار عقب (کیلوگرم): <input id="cargoAft" type="number" class="w-full mt-1 p-2 rounded bg-black text-green-400 border border-green-700"></label>
+      <label>سوخت کل (کیلوگرم): <input id="fuel" type="number" class="w-full mt-1 p-2 rounded bg-black text-green-400 border border-green-700"></label>
     </div>
 
-    <button onclick="calculate()" class="bg-amber-500 hover:bg-amber-600 text-black font-bold py-2 px-4 rounded w-full">
-      محاسبه
+    <button onclick="calculate()" class="w-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold py-3 px-4 rounded-xl shadow-md tracking-widest">
+      CALCULATE
     </button>
 
-    <div id="output" class="bg-gray-800 p-4 rounded shadow text-center hidden">
-      <h2 class="text-xl font-bold mb-2 text-emerald-400">نتایج:</h2>
-      <p id="zfw"></p>
-      <p id="tow"></p>
-      <p id="law"></p>
-      <p id="alert" class="mt-4 font-bold"></p>
+    <div id="output" class="glass p-6 rounded-xl border border-green-800 hidden">
+      <div class="text-xl text-center font-bold text-green-300 mb-4">LOAD RESULTS</div>
+      <div class="grid grid-cols-1 gap-3 text-green-200">
+        <p id="zfw" class="text-lg"></p>
+        <p id="tow" class="text-lg"></p>
+        <p id="law" class="text-lg"></p>
+      </div>
+      <div id="alert" class="mt-6 text-center font-bold text-lg"></div>
     </div>
   </div>
 
@@ -40,24 +55,42 @@
       const cargoAft = +document.getElementById('cargoAft').value || 0;
       const fuel = +document.getElementById('fuel').value || 0;
 
-      const BOW = 33300; // Basic Operating Weight in kg
+      const BOW = 33300;
       const paxWeight = (paxFwd + paxMid + paxAft) * 80;
       const cargo = cargoFwd + cargoAft;
 
       const ZFW = BOW + paxWeight + cargo;
       const TOW = ZFW + fuel;
-      const LAW = TOW - 2500; // فرض می‌کنیم 2500 کیلو سوخت مصرف میشه تا فرود
+      const LAW = TOW - 2500;
 
-      document.getElementById('zfw').innerText = `ZFW (وزن بدون سوخت): ${ZFW.toLocaleString()} kg`;
-      document.getElementById('tow').innerText = `TOW (وزن هنگام برخاست): ${TOW.toLocaleString()} kg`;
-      document.getElementById('law').innerText = `LAW (وزن هنگام فرود): ${LAW.toLocaleString()} kg`;
+      document.getElementById('zfw').innerText = `ZFW : ${ZFW.toLocaleString()} kg`;
+      document.getElementById('tow').innerText = `TOW : ${TOW.toLocaleString()} kg`;
+      document.getElementById('law').innerText = `LAW : ${LAW.toLocaleString()} kg`;
 
       let alertText = "";
-      if (ZFW > 48000) alertText += "⚠️ ZFW از حد مجاز بیشتر است!\n";
-      if (TOW > 59000) alertText += "⚠️ TOW از حد مجاز بیشتر است!\n";
-      if (LAW > 51000) alertText += "⚠️ LAW از حد مجاز بیشتر است!";
+      let alertClass = "text-green-500 led";
 
-      document.getElementById('alert').innerText = alertText || "✅ همه چیز در محدوده مجاز است.";
+      if (ZFW > 48000) {
+        alertText += "⚠️ ZFW خارج از محدوده مجاز!\n";
+        alertClass = "text-red-500";
+      }
+      if (TOW > 59000) {
+        alertText += "⚠️ TOW خارج از محدوده مجاز!\n";
+        alertClass = "text-red-500";
+      }
+      if (LAW > 51000) {
+        alertText += "⚠️ LAW خارج از محدوده مجاز!";
+        alertClass = "text-red-500";
+      }
+
+      if (!alertText) {
+        alertText = "✅ همه‌چیز داخل محدوده مجازه.";
+      }
+
+      const alertBox = document.getElementById('alert');
+      alertBox.innerText = alertText;
+      alertBox.className = `mt-6 text-center font-bold text-lg ${alertClass}`;
+
       document.getElementById('output').classList.remove('hidden');
     }
   </script>
